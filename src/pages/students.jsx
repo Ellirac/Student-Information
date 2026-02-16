@@ -1,98 +1,140 @@
-import React, { useEffect, useState } from 'react'
-import Student from '../components/StudentComponents/students'
-import Modal from '../components/StudentComponents/modal'
-import StudentCard from '../components/StudentComponents/student_card'
-import { fetchStudents } from '../api/student_api'
+import React, { useEffect, useState } from "react";
+import { fetchStudent } from "../api/student_api";
+import { useParams, Link } from "react-router-dom";
 
-export default function Students() {
-  const [tab, setTab] = useState('private') // 'private' | 'public'
-
-  // private students (local JSON)
-  const [privateList, setPrivateList] = useState([])
-  const [pLoading, setPLoading] = useState(true)
-  const [pError, setPError] = useState(null)
-
-  // public students (JSONPlaceholder)
-  const [publicList, setPublicList] = useState([])
-  const [uLoading, setULoading] = useState(true)
-  const [uError, setUError] = useState(null)
-
-  const [selected, setSelected] = useState(null)
+export default function StudentDetail() {
+  const { id } = useParams();
+  const [student, setStudent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    let mounted = true
-    fetchStudents()
-      .then((d) => mounted && setPrivateList(d))
-      .catch((e) => mounted && setPError(e.message))
-      .finally(() => mounted && setPLoading(false))
+    let mounted = true;
+    fetchStudent(id)
+      .then((s) => mounted && setStudent(s))
+      .catch((err) => mounted && setError(err.message))
+      .finally(() => mounted && setLoading(false));
+    return () => (mounted = false);
+  }, [id]);
 
-  fetch('https://jsonplaceholder.typicode.com/users')
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response not ok')
-        return res.json()
-      })
-      .then((data) => {
-        if (!mounted) return
-    // request 10 users if available; map to student shape
-    const mapped = data.slice(0, 10).map((u, idx) => ({
-          id: u.id,
-          name: u.name,
-          age: 18 + (idx % 5),
-          major: ['Computer Science', 'Mathematics', 'Biology', 'History'][idx % 4],
-          email: u.email,
-        }))
-        setPublicList(mapped)
-      })
-      .catch((e) => mounted && setUError(e.message))
-      .finally(() => mounted && setULoading(false))
-
-    return () => (mounted = false)
-  }, [])
-
-  return (
-    <div className="container">
-      <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:18}}>
-        <h2 style={{margin:0}}>Students</h2>
-        <div className="tabs">
-          <button className={`tab ${tab==='private'?'active':''}`} onClick={() => setTab('private')}>Private</button>
-          <button className={`tab ${tab==='public'?'active':''}`} onClick={() => setTab('public')}>Public (API)</button>
+  if (loading) {
+    return (
+      <div className="container">
+        <div className="loading-state">
+          <p>Loading student details...</p>
         </div>
       </div>
+    );
+  }
 
-      {tab === 'private' && (
-        <div>
-          {pLoading && <p>Loading private students...</p>}
-          {pError && <p style={{color:'red'}}>Error: {pError}</p>}
-          <div className="grid">
-            {privateList.map((s) => (
-              <StudentCard key={s.id} student={s} />
-            ))}
+  if (error) {
+    return (
+      <div className="container">
+        <div className="error-state">
+          <p>Error: {error}</p>
+          <Link
+            to="/students"
+            className="back-link"
+            style={{ marginTop: "var(--space-lg)" }}
+          >
+            ← Back to Students
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!student) {
+    return (
+      <div className="container">
+        <div className="loading-state">
+          <p>No student found.</p>
+          <Link
+            to="/students"
+            className="back-link"
+            style={{ marginTop: "var(--space-lg)" }}
+          >
+            ← Back to Students
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const color = `hsl(${((student.id || 1) * 47) % 360} 70% 55%)`;
+  const initials = String(student.name || "")
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  return (
+    <div className="container detail-container">
+      <div className="detail-card">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-lg)",
+            marginBottom: "var(--space-xl)",
+          }}
+        >
+          <div
+            style={{
+              background: color,
+              width: "80px",
+              height: "80px",
+              borderRadius: "16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "var(--font-display)",
+              fontSize: "1.75rem",
+              color: "white",
+              boxShadow: "var(--shadow-md)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.2), transparent)",
+              }}
+            />
+            {initials}
+          </div>
+
+          <div>
+            <h2 style={{ marginBottom: "4px" }}>{student.name}</h2>
+            <p style={{ color: "var(--text-secondary)", margin: 0 }}>
+              Student Profile
+            </p>
           </div>
         </div>
-      )}
 
-      {tab === 'public' && (
-        <div>
-          {uLoading && <p>Loading public students...</p>}
-          {uError && <p style={{color:'red'}}>Error: {uError}</p>}
-          <div className="grid">
-            {publicList.map((s) => (
-              <Student key={s.id} student={s} onClick={(st) => setSelected(st)} />
-            ))}
-          </div>
-          {/* modal for detail */}
-          {selected && (
-            <>
-              <Modal open={!!selected} onClose={() => setSelected(null)}>
-                <h3>{selected.name}</h3>
-                <p><strong>Age:</strong> {selected.age}</p>
-                <p><strong>Major:</strong> {selected.major}</p>
-                <p><strong>Email:</strong> {selected.email}</p>
-              </Modal>
-            </>
-          )}
+        <div className="detail-info">
+          <p>
+            <strong>Age:</strong> {student.age} years old
+          </p>
+          <p>
+            <strong>Major:</strong> {student.major}
+          </p>
+          <p>
+            <strong>Email:</strong> {student.email}
+          </p>
+          <p>
+            <strong>Student ID:</strong> #{student.id}
+          </p>
         </div>
-      )}
+
+        <Link to="/students" className="back-link">
+          ← Back to Students
+        </Link>
+      </div>
     </div>
-  )
+  );
 }

@@ -1,29 +1,85 @@
-import React from 'react'
+import React from "react";
 
 export default function Home() {
   return (
     <div className="container">
-      <section className="intro" aria-label="introduction">
-        <h2 className="intro-title">Welcome to Students Information</h2>
-        <p className="intro-lead">This demo application shows component usage, props & state, client-side routing, and basic API integration. Use the Students tab to explore private (local) and public (API) student lists. Each card reveals additional info when interacted with.</p>
+      <div className="intro">
+        <h1 className="intro-title">Welcome to Scholar Portal</h1>
+        <p className="intro-lead">
+          A comprehensive student information management system designed to
+          streamline academic data access and organization. Explore student
+          profiles, manage records, and integrate seamlessly with external data
+          sources.
+        </p>
 
-        <div className="intro-grid" role="list">
-          <div className="intro-card" role="listitem">
-            <h3>Purpose</h3>
-            <p className="muted">Showcase a small SPA architecture suitable for learning React fundamentals.</p>
+        <div className="intro-grid">
+          <div className="intro-card">
+            <h3>Unified Dashboard</h3>
+            <p>
+              Access both private institutional data and public API integrations
+              in one centralized interface. Seamlessly switch between data
+              sources with our intuitive tabbed navigation.
+            </p>
           </div>
 
-          <div className="intro-card" role="listitem">
-            <h3>How it works</h3>
-            <p className="muted">Local JSON provides private students; JSONPlaceholder demonstrates fetching public data.</p>
+          <div className="intro-card">
+            <h3>Smart Search</h3>
+            <p>
+              Find students instantly with our powerful search functionality.
+              Filter by name, major, or any attribute to quickly locate the
+              information you need.
+            </p>
           </div>
 
-          <div className="intro-card" role="listitem">
-            <h3>Try it</h3>
-            <p className="muted">Click Students → Public (API) and then click a card to see details. Use the search on Private to filter.</p>
+          <div className="intro-card">
+            <h3>Detailed Profiles</h3>
+            <p>
+              View comprehensive student information including demographics,
+              academic programs, and contact details. Click any card to reveal
+              full profile information.
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+
+      <div
+        style={{
+          marginTop: "var(--space-2xl)",
+          padding: "var(--space-xl)",
+          background: "var(--bg-elevated)",
+          borderRadius: "16px",
+          border: "1px solid var(--border-light)",
+        }}
+      >
+        <h3
+          style={{
+            marginBottom: "var(--space-md)",
+            color: "var(--accent-primary)",
+          }}
+        >
+          Getting Started
+        </h3>
+        <ol
+          style={{
+            paddingLeft: "var(--space-lg)",
+            color: "var(--text-secondary)",
+            lineHeight: "1.8",
+          }}
+        >
+          <li>
+            Navigate to the <strong>Students</strong> page using the header menu
+          </li>
+          <li>
+            Toggle between <strong>Private</strong> (local data) and{" "}
+            <strong>Public API</strong> sources
+          </li>
+          <li>Use the search bar to filter students by name or attributes</li>
+          <li>Click any student card to view their complete profile</li>
+          <li>
+            Explore email visibility toggles and detailed information modals
+          </li>
+        </ol>
+      </div>
     </div>
-  )
+  );
 }
