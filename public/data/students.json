@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "name": "Adrian B. Tablada",
+    "name": " Carille M. Zapata",
     "age": 20,
-    "major": "Computer Science",
-    "email": "tabladaadrian37@gmail.com"
+    "major": "Information Technology",
+    "email": "zapatacarille13@gmail.com"
   },
   {
     "id": 2,
-    "name": "Carl Go",
+    "name": "Carlo Enriquez",
     "age": 19,
-    "major": "Mathematics",
-    "email": "carl.go@example.edu"
+    "major": "Science",
+    "email": "cal.enriquez@pnc.edu.ph"
   },
   {
     "id": 3,
@@ -22,9 +22,9 @@
   },
   {
     "id": 4,
-    "name": "Gia Mae P Dominguito",
+    "name": "Ella Mae Garcia",
     "age": 19,
     "major": "Accounting",
-    "email": "gia.dominguito@example.edu"
+    "email": "ella.garcia@example.edu"
   }
 ]
